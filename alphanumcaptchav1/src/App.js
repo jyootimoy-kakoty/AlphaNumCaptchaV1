@@ -5,7 +5,7 @@ import { useState, useEffect, useRef } from 'react';
 function App() {
   useEffect(() => {
     //listener will be added on component mounted
-    window.addEventListener('load', () => {generateCaptcha()});
+    window.addEventListener('load', () => {generateCaptcha(); generateImgCaptcha()});
   }, [])
 
   return (
@@ -29,7 +29,7 @@ function App() {
         >
           Learn React
         </a>
-      </header>
+      </header>   
 
       <div className="captcha" onLoad={() => generateCaptcha()}>
         <div className="wrapper"></div>
@@ -47,14 +47,34 @@ function App() {
             Generate New
         </button>
       </div>
+
+      <div className="imgCaptcha" onLoad={() => generateImgCaptcha()}>
+        <div className="wrapper"></div>
+        <h2 id="statusImgCaptcha" style={{color: '#ee7e6a'}}></h2>
+        <div>
+            <canvas type="text" readOnly id="generatedImgCaptcha" height="22px"  width="270px"/>
+        </div>
+        <div>
+            <input type="text" id="enteredImgCaptcha" placeholder="Enter the captcha.."/>
+        </div>
+        <button type="button" onClick={() => checkImgCaptcha()}>
+            Submit
+        </button>
+        <button type="button" onClick={() => generateImgCaptcha()} id="genImg">
+            Generate New
+        </button>
+      </div>
     </div>
   );
 }
 
-let captcha = '';
+let captcha = '', imgCaptcha = [], imgCaptchaLength = 6, imgCaptchaa = '';
 let alphabets = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz";
+let charsArray = "0123456789AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz@!#$%^&*";
+
 //console.log(alphabets.length);
 
+/*Simple Text Captcha*/
 function generateCaptcha() {
   let status = document.getElementById('status');
   status.innerText = "Captcha Challenge";
@@ -82,6 +102,52 @@ function check() {
   } else {
     status.innerText = "Try Again!!";
     document.getElementById("enteredCaptcha").value = '';
+  }
+}
+
+/*Image Captcha*/
+function generateImgCaptcha() {
+  let statusImgCaptcha = document.getElementById('statusImgCaptcha');
+  statusImgCaptcha.innerText = "Captcha Challenge";
+  imgCaptcha = [];
+  imgCaptchaa = '';
+  // console.log(status)
+  for (let i = 0; i < imgCaptchaLength; i++) {
+    imgCaptcha.push(charsArray[Math.floor(Math.random() * charsArray.length)]);
+    imgCaptchaa += imgCaptcha[i].toString();
+  }
+  let captchaCanvas = document.getElementById("generatedImgCaptcha");
+  let context = captchaCanvas.getContext("2d");
+  context.clearRect ( 0, 0, captchaCanvas.width, captchaCanvas.height);//Clears the canvas
+  console.log(context);
+  context.font = "20px Georgia";
+  context.textAlign = "center";
+  context.fillStyle = "yellow";
+  context.strokeText(imgCaptcha.join(""), 135, 17, 270);
+  console.log(imgCaptcha, imgCaptchaa);
+  context.beginPath();
+  context.moveTo(40,(Math.random()%10));
+  context.lineTo(250,20-(Math.random()%20));
+  context.moveTo(80,10-(Math.random()%10));
+  context.lineTo(190-(Math.random()%20),2);
+  /*context.moveTo(110+(Math.random()%20),(Math.random()%5));
+  context.lineTo(150,20+(Math.random()%5));*/
+  context.stroke();
+  document.getElementById("enteredImgCaptcha").value = '';
+}
+
+function checkImgCaptcha() {
+  let statusImgCaptcha = document.getElementById('statusImgCaptcha');
+  // console.log(status)
+  let userValueImgCaptcha = document.getElementById("enteredImgCaptcha").value;
+  //console.log(imgCaptchaa);
+  //console.log(userValueImgCaptcha);
+  
+  if (userValueImgCaptcha === imgCaptchaa) {
+    statusImgCaptcha.innerText = "Correct!!"
+  } else {
+    statusImgCaptcha.innerText = "Try Again!!";
+    document.getElementById("enteredImgCaptcha").value = '';
   }
 }
 
