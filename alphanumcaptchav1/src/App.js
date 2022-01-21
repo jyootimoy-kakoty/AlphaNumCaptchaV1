@@ -11,12 +11,13 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+        <img src={logo} className="App-logo" alt="logo" style={{display: 'none'}}/>
         <a
           className="App-link"
           href="https://reactjs.org"
           target="_blank"
           rel="noopener noreferrer"
+          style={{display: 'none'}}
           //The two new tags can be used either separately or jointly, or in combination with "nofollow", depending on your goals and security requirements, and your desired effect on SEO (Search engine optimization).
           //rel="noreferrer"
           //When a user moves from URL X to URL Y, the owner of URL Y receives information about their previous web location. It is easy to identify the sources of incoming traffic by viewing a special report in Google Analytics. 
@@ -31,7 +32,7 @@ function App() {
         </a>
       </header>   
 
-      <div className="captcha" onLoad={() => generateCaptcha()}>
+      <div className="captcha">
         <div className="wrapper"></div>
         <h2 id="status" style={{color: '#ee7e6a'}}></h2>
         <div>
@@ -48,7 +49,7 @@ function App() {
         </button>
       </div>
 
-      <div className="imgCaptcha" onLoad={() => generateImgCaptcha()}>
+      <div className="imgCaptcha">
         <div className="wrapper"></div>
         <h2 id="statusImgCaptcha" style={{color: '#ee7e6a'}}></h2>
         <div>
