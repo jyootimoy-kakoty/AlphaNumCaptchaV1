@@ -1,12 +1,18 @@
 import logo from './logo.svg';
 import './App.css';
 import { useState, useEffect, useRef } from 'react';
+import crypto from 'crypto-js';
 
 function App() {
   useEffect(() => {
     //listener will be added on component mounted
-    window.addEventListener('load', () => {generateCaptcha(); generateImgCaptcha()});
+    window.addEventListener('load', () => {generateCaptcha(); generateImgCaptcha(); generateCryptoCaptcha()});
   }, [])
+  const [aesHashedText,setAesHashedText] = useState("");
+  const [md5HashedText,setMd5HashedText] = useState("");
+  const [sha512HashedText,setSha512HashedText] = useState("");
+  const [sha256HashedText,setSha256HashedText] = useState("");
+  const [sha3HashedText,setSha3HashedText] = useState("");
 
   return (
     <div className="App">
@@ -34,7 +40,7 @@ function App() {
 
       <div className="captcha">
         <div className="wrapper"></div>
-        <h2 id="status" style={{color: '#ee7e6a'}}></h2>
+        <h2 id="status" style={{color: '#ee7e6a'}}>Captcha Challenge</h2>
         <div>
             <input type="text" readOnly id="generatedCaptcha"/>
         </div>
@@ -51,7 +57,7 @@ function App() {
 
       <div className="imgCaptcha">
         <div className="wrapper"></div>
-        <h2 id="statusImgCaptcha" style={{color: '#ee7e6a'}}></h2>
+        <h2 id="statusImgCaptcha" style={{color: '#ee7e6a'}}>Captcha Challenge</h2>
         <div>
             <canvas type="text" readOnly id="generatedImgCaptcha" height="22px"  width="270px"/>
         </div>
@@ -65,15 +71,37 @@ function App() {
             Generate New
         </button>
       </div>
+
+      <div className="cryptoCaptcha">
+        <div className="wrapper"></div>
+        <h2 id="statusCryptoCaptcha" style={{color: '#ee7e6a'}}>Captcha Challenge</h2>
+        <div>
+            <canvas type="text" readOnly id="generatedCryptoCaptcha" height="22px"  width="270px"/>
+        </div>
+        <div>
+            <input type="text" id="enteredCryptoCaptcha" placeholder="Enter the captcha.."/>
+        </div>
+        <button type="button" onClick={() => checkCryptoCaptcha()}>
+            Submit
+        </button>
+        <button type="button" onClick={() => generateCryptoCaptcha()} id="genCrypto">
+            Generate New
+        </button>
+      </div>
     </div>
   );
 }
 
 let captcha = '', imgCaptcha = [], imgCaptchaLength = 6, imgCaptchaa = '';
+let cryptoCaptcha = [], cryptoCaptchaLength = 6, cryptoCaptchaa = '', plainText = '';
 let alphabets = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz";
 let charsArray = "0123456789AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz@!#$%^&*";
-
 //console.log(alphabets.length);
+
+function setMd5HashedText(plainText) {return crypto.MD5(plainText).toString()};// md5
+function setSha512HashedText(plainText) {return crypto.SHA512(plainText).toString()};// sha512
+function setSha256HashedText(plainText) {return crypto.SHA256(plainText).toString()};// sha256
+function setSha3HashedText(plainText) {return crypto.SHA3(plainText).toString()};//sha3
 
 /*Simple Text Captcha*/
 function generateCaptcha() {
@@ -87,7 +115,7 @@ function generateCaptcha() {
   let fifth = alphabets[Math.floor(Math.random() * alphabets.length)];
   let sixth = Math.floor(Math.random() * 10);
   captcha = first.toString()+second.toString()+third.toString()+fourth.toString()+fifth.toString()+sixth.toString();
-  console.log(captcha);
+  //console.log(captcha);
   document.getElementById("generatedCaptcha").value = captcha;
   document.getElementById("enteredCaptcha").value = '';
 }
@@ -120,12 +148,12 @@ function generateImgCaptcha() {
   let captchaCanvas = document.getElementById("generatedImgCaptcha");
   let context = captchaCanvas.getContext("2d");
   context.clearRect ( 0, 0, captchaCanvas.width, captchaCanvas.height);//Clears the canvas
-  console.log(context);
+  //console.log(context);
   context.font = "20px Georgia";
   context.textAlign = "center";
   context.fillStyle = "yellow";
   context.strokeText(imgCaptcha.join(""), 135, 17, 270);
-  console.log(imgCaptcha, imgCaptchaa);
+  //console.log(imgCaptcha, imgCaptchaa);
   context.beginPath();
   context.moveTo(40,(Math.random()%10));
   context.lineTo(250,20-(Math.random()%20));
@@ -149,6 +177,59 @@ function checkImgCaptcha() {
   } else {
     statusImgCaptcha.innerText = "Try Again!!";
     document.getElementById("enteredImgCaptcha").value = '';
+  }
+}
+
+/*Crypto Captcha*/
+function generateCryptoCaptcha() {
+  let statusCryptoCaptcha = document.getElementById('statusCryptoCaptcha');
+  statusCryptoCaptcha.innerText = "Captcha Challenge";
+  cryptoCaptcha = [];
+  cryptoCaptchaa = '';
+  // console.log(status)
+  for (let i = 0; i < cryptoCaptchaLength; i++) {
+    cryptoCaptcha.push(charsArray[Math.floor(Math.random() * charsArray.length)]);
+    plainText += cryptoCaptcha[i].toString();
+  }
+  //console.log(setMd5HashedText(plainText));// md5
+  //console.log(setSha512HashedText(plainText));// sha512
+  //console.log(setSha256HashedText(plainText));// sha256
+  //console.log(setSha3HashedText(plainText));//sha3
+  
+  let cryptoCaptchaCanvas = document.getElementById("generatedCryptoCaptcha");
+  let context = cryptoCaptchaCanvas.getContext("2d");
+  context.clearRect ( 0, 0, cryptoCaptchaCanvas.width, cryptoCaptchaCanvas.height);//Clears the canvas
+  //console.log(context);
+  context.font = "20px Georgia";
+  context.textAlign = "center";
+  context.fillStyle = "yellow";
+  context.strokeText(cryptoCaptcha.join(""), 135, 17, 270);
+  //console.log(cryptoCaptcha, cryptoCaptchaa);
+  context.beginPath();
+  context.moveTo(40,(Math.random()%10));
+  context.lineTo(250,20-(Math.random()%20));
+  context.moveTo(80,10-(Math.random()%10));
+  context.lineTo(190-(Math.random()%20),2);
+  /*context.moveTo(110+(Math.random()%20),(Math.random()%5));
+  context.lineTo(150,20+(Math.random()%5));*/
+  context.stroke();
+  cryptoCaptchaa = setSha512HashedText(plainText);
+  cryptoCaptcha = [];
+  plainText ='';
+  document.getElementById("enteredCryptoCaptcha").value = '';
+}
+
+function checkCryptoCaptcha() {
+  let statusCryptoCaptcha = document.getElementById('statusCryptoCaptcha');
+  // console.log(status)
+  let userValueCryptoCaptcha = document.getElementById("enteredCryptoCaptcha").value;
+  //console.log(cryptoCaptchaa);
+  //console.log(userValueCryptoCaptcha);
+  if (setSha512HashedText(userValueCryptoCaptcha) === cryptoCaptchaa) {
+    statusCryptoCaptcha.innerText = "Correct!!"
+  } else {
+    statusCryptoCaptcha.innerText = "Try Again!!";
+    document.getElementById("enteredCryptoCaptcha").value = '';
   }
 }
 

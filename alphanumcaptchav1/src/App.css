@@ -37,10 +37,11 @@
   }
 }
 
-.captcha, .imgCaptcha {
-  display: flex;
+.captcha, .imgCaptcha, .cryptoCaptcha {
+  display: inline-flex;
   justify-content: center;
   height: 50vh;
+  width: 100vh;
   align-items: center;
   padding: 0;
   margin: 0;
@@ -50,19 +51,18 @@
   background-attachment: fixed;
   background-size: cover;
 }
-
-.captcha div, .imgCaptcha div {
+.captcha div, .imgCaptcha div, .cryptoCaptcha div {
   margin-bottom: 10px;
 }
-.captcha button, .imgCaptcha button {
+.captcha button, .imgCaptcha button, .cryptoCaptcha button {
   margin-bottom: 5px;
   cursor: pointer;
 }
-.captcha input, .imgCaptcha input {
+.captcha input, .imgCaptcha input, .cryptoCaptcha input {
   text-decoration: none;
 }
 
-#generatedCaptcha, #generatedImgCaptcha {
+#generatedCaptcha, #generatedImgCaptcha, #generatedCryptoCaptcha {
   text-decoration: line-through;
   font-weight: bold;
   text-align: center;
@@ -76,7 +76,7 @@
   /*height: 22px;
   width: 270px;*/
 }
-#enteredCaptcha, #enteredImgCaptcha {
+#enteredCaptcha, #enteredImgCaptcha, #enteredCryptoCaptcha {
   border: 2px solid #c5c7f7;
   font-family: monospace;
   outline: none;
@@ -84,7 +84,7 @@
   padding: 8px 15px;
   font-size: 12px;
 }
-.captcha button, .imgCaptcha button {
+.captcha button, .imgCaptcha button, .cryptoCaptcha button {
   border: none;
   padding: 8px 20px;
   border-radius: 6px;
@@ -95,7 +95,7 @@
   background-color: #64f394;
 }
 
-#gen, #genImg {
+#gen, #genImg, #genCrypto {
   background-color: #ee7e6a;
 }
 .wrappr {
